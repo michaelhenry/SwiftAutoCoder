@@ -1,0 +1,7 @@
+use_frameworks!
+target 'SwiftAutoCoder_Tests' do
+  pod 'SwiftAutoCoder', :path => '../'
+  
+  pod 'Quick', '~> 1.0.0'
+  pod 'Nimble', '~> 5.1.1'
+end
