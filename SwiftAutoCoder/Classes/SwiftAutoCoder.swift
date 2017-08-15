@@ -7,23 +7,55 @@
 //
 
 
-extension NSObject {
+
+public protocol KeyValueSetterGetter {
+    func setValue(_ value: Any?, forKey key: String)
+    func value(forKey key: String) -> Any?
+}
+
+public extension KeyValueSetterGetter where Self:NSCoding {
+    
+    fileprivate func encodable(_ value:Any) -> Bool {
+        switch value {
+        case is ExpressibleByBooleanLiteral,
+             is ExpressibleByIntegerLiteral,
+             is ExpressibleByFloatLiteral,
+             is ExpressibleByUnicodeScalarLiteral,
+             is ExpressibleByExtendedGraphemeClusterLiteral,
+             is ExpressibleByArrayLiteral,
+             is ExpressibleByDictionaryLiteral,
+             is ExpressibleByStringLiteral:
+            
+            return true
+        default:
+            print(value)
+            return false
+        }
+    }
     
     fileprivate var properties: [String] {
-        return Mirror(reflecting: self).children.flatMap { $0.label }
+        return Mirror(reflecting: self)
+            .children
+            .filter { encodable($0.value) }
+            .flatMap { $0.label }
     }
     
     public func autoDecode(_ aDecoder: NSCoder) {
         properties.forEach { (keypath) in
-            let keyValue = aDecoder.decodeObject(forKey: keypath)
-            setValue(keyValue, forKey: keypath)
+            if let keyValue = aDecoder.decodeObject(forKey: keypath) {
+                setValue(keyValue, forKey: keypath)
+            }
         }
     }
     
     public func autoEncode(with aCoder: NSCoder) {
         properties.forEach { (keypath) in
-            let keyvalue = value(forKey: keypath)
-            aCoder.encode(keyvalue, forKey: keypath)
+            if let keyValue = value(forKey: keypath) {
+                aCoder.encode(keyValue, forKey: keypath)
+            }
         }
     }
 }
+
+extension NSObject:KeyValueSetterGetter {}
+
