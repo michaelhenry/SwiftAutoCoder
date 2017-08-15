@@ -4,46 +4,43 @@ import Quick
 import Nimble
 import SwiftAutoCoder
 
+class User:NSObject, NSCoding {
+
+    var name:String = ""
+    var age:Int = 0
+    var staff:Bool = false
+    
+    init(name:String, age:Int) {
+        self.name = name
+        self.age = age
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init()
+        autoDecode(aDecoder)
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        autoEncode(with: aCoder)
+    }
+}
+
 class TableOfContentsSpec: QuickSpec {
     override func spec() {
-        describe("these will fail") {
-
-            it("can do maths") {
-                expect(1) == 2
-            }
-
-            it("can read") {
-                expect("number") == "string"
-            }
-
-            it("will eventually fail") {
-                expect("time").toEventually( equal("done") )
-            }
+        
+        describe("Check it") {
             
-            context("these will pass") {
-
-                it("can do maths") {
-                    expect(23) == 23
-                }
-
-                it("can read") {
-                    expect("🐮") == "🐮"
-                }
-
-                it("will eventually pass") {
-                    var time = "passing"
-
-                    DispatchQueue.main.async {
-                        time = "done"
-                    }
-
-                    waitUntil { done in
-                        Thread.sleep(forTimeInterval: 0.5)
-                        expect(time) == "done"
-
-                        done()
-                    }
-                }
+            it("can archive/unarchive object") {
+                let name = "マイケルヘンリー 😎 :)"
+                let me = User(name: name, age: 119)
+                me.staff = true
+                let data = NSKeyedArchiver.archivedData(withRootObject: me)
+                let theSameMe = NSKeyedUnarchiver.unarchiveObject(with: data) as! User
+                
+                expect(theSameMe.name) == name
+                expect(theSameMe.age) == 119
+                expect(theSameMe.staff) == true
+                
             }
         }
     }
