@@ -10,7 +10,7 @@
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Note
-- `Optionals` variable are not not codable.
+- `Optionals` variable are not codable.
 
 ## Installation
 
