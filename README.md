@@ -11,6 +11,16 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Note
 - `Optionals` variable are not codable.
+- Supported Literal :
+  - BooleanLiteral
+  - IntegerLiteral
+  - FloatLiteral
+  - UnicodeScalarLiteral
+  - ExtendedGraphemeClusterLiteral
+  - ArrayLiteral
+  - DictionaryLiteral
+  - StringLiteral
+
 
 ## Installation
 
